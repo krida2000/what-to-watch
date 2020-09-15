@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Main page screen correctly render 1`] = `
+<section
+  className="film"
+>
+  <div>
+    <img
+      alt="Movie image"
+      src="./img/avatar.jpg"
+    />
+    <p
+      className="movie-title"
+    >
+      test
+    </p>
+  </div>
+</section>
+`;
