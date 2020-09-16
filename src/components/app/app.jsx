@@ -3,7 +3,7 @@ import {PureComponent} from 'react';
 import PropTypes from "prop-types";
 import MoviePage from "../movie-page/movie-page";
 import AuthorizationScreen from "../authorization-screen/authorization-screen";
-import WatchMoviePage from "../watch-movie-page/watch-movie-page";
+import WatchMoviePageWrapped from "../watch-movie-page/watch-movie-page";
 import history, {DefRoute} from '../../history';
 import {Switch, Route, Redirect, BrowserRouter, Router} from "react-router-dom";
 
@@ -24,7 +24,7 @@ class App extends PureComponent {
           </Route>
           <Route exact path={`${DefRoute.MOVIE_PAGE}:id`} component={MoviePage}/>
           <Route exact path={`${DefRoute.MOVIE_PAGE}:id/watch`}>
-            <WatchMoviePage />
+            <WatchMoviePageWrapped />
           </Route>
         </Switch>
       </BrowserRouter>

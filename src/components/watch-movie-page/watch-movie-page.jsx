@@ -1,21 +1,53 @@
-import React from "react";
+import React, {PureComponent} from "react";
 import PropTypes from "prop-types";
-import {ActionCreator} from "../../reduсer";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
-import {DefRoute} from "../../history";
+import withPlayVideo from "../../hocs/with-play-video/with-play-video";
+import WatchMoviePageControls from "../watch-movie-page-controls/watch-movie-page-controls";
 
-const WatchMoviePage = (props) => {
-  const {allFilms, match} = props;
+class WatchMoviePage extends PureComponent {
 
-  const film = allFilms.find((el) => +el.id === +match.params.id);
+  constructor(props) {
+    super(props);
 
-  return <div>All WORK</div>;
-};
+    this.videoRef = React.createRef();
+  }
+
+  play() {
+    const video = this.videoRef.current;
+
+    video.play();
+  }
+
+  pause() {
+    const video = this.videoRef.current;
+
+    video.pause();
+  }
+
+  render() {
+    const {allFilms, match, onPlay, onPause, isPlaying} = this.props;
+
+    const film = allFilms.find((el) => +el.id === +match.params.id);
+
+    if (!film) {
+      return null;
+    }
+
+    return <div className="player">
+      <video ref={this.videoRef} className={`player__video`} poster={film.poster_image} src={film.video_link} autoPlay={isPlaying}/>
+      <WatchMoviePageControls isPlaying={isPlaying} onPlay={() => {onPlay(); this.play();}} onPause={() => {onPause(); this.pause();}}/>
+    </div>;
+  }
+}
 
 WatchMoviePage.propTypes = {
   allFilms: PropTypes.array.isRequired,
   match: PropTypes.object.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  onPlay: PropTypes.func.isRequired,
+  onPause: PropTypes.func.isRequired,
+  renderControls: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -24,4 +56,6 @@ const mapStateToProps = (state, ownProps) => {
   });
 };
 
-export default connect(mapStateToProps)(withRouter(WatchMoviePage));
+const WatchMoviePageWrapped = withPlayVideo(WatchMoviePage);
+
+export default connect(mapStateToProps)(withRouter(WatchMoviePageWrapped));
