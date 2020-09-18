@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {ActionCreator} from "../../reduсer";
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {DefRoute} from "../../history";
 
 const Header = (props) => {
@@ -19,9 +19,9 @@ const Header = (props) => {
 
     <div className="user-block">
       {avatarUrl === `` ?
-        <a href={`#`}>Sign in</a> :
+        <NavLink to={DefRoute.AUTH}>Sign in</NavLink> :
         <div className="user-block__avatar">
-          <img src="https://hollow-art.com/files/bases/2019/04/20190411/29806/ralph-fiennes-grand-budapest-hotel-base-icons-3854129.png" alt="User avatar" width="63" height="63"/>
+          <img src={`https://htmlacademy-react-2.appspot.com/` + avatarUrl} alt="User avatar" width="63" height="63"/>
         </div>}
     </div>
   </header>;

@@ -11,6 +11,7 @@ class WatchMoviePage extends PureComponent {
     super(props);
 
     this.videoRef = React.createRef();
+    this.fullscreenFunc = this.fullscreen.bind(this);
   }
 
   play() {
@@ -25,6 +26,18 @@ class WatchMoviePage extends PureComponent {
     video.pause();
   }
 
+  fullscreen() {
+    const video = this.videoRef.current;
+
+    const videoParent = video.parentElement;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      videoParent.requestFullscreen({navigationUI: `show`});
+    }
+  }
+
   render() {
     const {allFilms, match, onPlay, onPause, isPlaying} = this.props;
 
@@ -36,7 +49,16 @@ class WatchMoviePage extends PureComponent {
 
     return <div className="player">
       <video ref={this.videoRef} className={`player__video`} poster={film.poster_image} src={film.video_link} autoPlay={isPlaying}/>
-      <WatchMoviePageControls isPlaying={isPlaying} onPlay={() => {onPlay(); this.play();}} onPause={() => {onPause(); this.pause();}}/>
+      <WatchMoviePageControls isPlaying={isPlaying}
+        onPlay={() => {
+          onPlay();
+          this.play();
+        }}
+        onPause={() => {
+          onPause();
+          this.pause();
+        }}
+        fullscreen={() => this.fullscreenFunc}/>
     </div>;
   }
 }

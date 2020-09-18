@@ -12,6 +12,10 @@ class AuthorizationScreen extends PureComponent {
     let login = React.createRef();
     let pass = React.createRef();
 
+    if (isAuthorizationRequired === undefined) {
+      return null;
+    }
+
     if (!isAuthorizationRequired) {
       return <Redirect to={`/`}/>;
     }
@@ -48,7 +52,7 @@ class AuthorizationScreen extends PureComponent {
 
 AuthorizationScreen.propTypes = {
   onAuthorization: PropTypes.func.isRequired,
-  isAuthorizationRequired: PropTypes.bool.isRequired,
+  isAuthorizationRequired: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {

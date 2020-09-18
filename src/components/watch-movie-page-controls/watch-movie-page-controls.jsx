@@ -6,7 +6,7 @@ import withPlayVideo from "../../hocs/with-play-video/with-play-video";
 
 class WatchMoviePageControls extends PureComponent {
   render() {
-    const {isPlaying, onPlay, onPause} = this.props;
+    const {isPlaying, onPlay, onPause, fullscreen} = this.props;
 
     return <div className="player__controls">
       <div className="player__controls-row">
@@ -26,7 +26,7 @@ class WatchMoviePageControls extends PureComponent {
         </button>
         <div className="player__name visually-hidden">Transpotting</div>
 
-        <button type="button" className="player__full-screen visually-hidden">
+        <button type="button" className="player__full-screen" onClick={fullscreen()}>
           <svg viewBox="0 0 27 27" width="27" height="27">
             <use xlinkHref="#full-screen"/>
           </svg>
@@ -41,6 +41,7 @@ WatchMoviePageControls.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   onPlay: PropTypes.func.isRequired,
   onPause: PropTypes.func.isRequired,
+  fullscreen: PropTypes.func.isRequired,
 };
 
 export default WatchMoviePageControls;

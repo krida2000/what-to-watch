@@ -1,39 +1,39 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, PureComponent} from 'react';
 import PropTypes from "prop-types";
 import history, {DefRoute} from "../../history";
-import {Redirect} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import Header from "../header/header.jsx";
 import GenreList from "../genre-list/genre-list.jsx";
 import MoviesListWrapped from "../movies-list/movies-list";
 import {ActionCreator, Operation} from "../../reduсer";
 import {connect} from "react-redux";
 
-const MainPage = (props) => {
-  const {curFilms, curGenre, genreChangeHandler, allFilms, isAuthorizationRequired} = props;
+class MainPage extends PureComponent {
+  render() {
+    const {curFilms, curGenre, genreChangeHandler, allFilms, isAuthorizationRequired} = this.props;
 
-  if (isAuthorizationRequired) {
-    history.push(DefRoute.AUTH);
-    return <Redirect to={DefRoute.AUTH} />;
+    if (isAuthorizationRequired) {
+      return <Redirect to={DefRoute.AUTH}/>;
+    }
+
+    return <Fragment>
+      <Header/>
+      <div className="page-content">
+        <section className="catalog">
+          <GenreList movies={allFilms} curGenre={curGenre} genreChangeHandler={genreChangeHandler}/>
+          <MoviesListWrapped movies={curFilms}/>
+        </section>
+      </div>
+    </Fragment>;
   }
-
-  return <Fragment>
-    <Header />
-    <div className="page-content">
-      <section className="catalog">
-        <GenreList movies={allFilms} curGenre={curGenre} genreChangeHandler={genreChangeHandler}/>
-        <MoviesListWrapped movies={curFilms}/>
-      </section>
-    </div>
-  </Fragment>;
-};
+}
 
 MainPage.propTypes = {
   curFilms: PropTypes.array.isRequired,
   allFilms: PropTypes.array.isRequired,
   curGenre: PropTypes.string.isRequired,
   genreChangeHandler: PropTypes.func.isRequired,
-  isAuthorizationRequired: PropTypes.bool.isRequired,
-  avatarUrl: PropTypes.string.isRequired,
+  isAuthorizationRequired: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -42,7 +42,6 @@ const mapStateToProps = (state, ownProps) => {
     curFilms: state.curFilms,
     allFilms: state.allFilms,
     isAuthorizationRequired: state.isAuthorizationRequired,
-    avatarUrl: state.avatarUrl,
   });
 };
 

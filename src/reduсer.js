@@ -100,7 +100,7 @@ const initialState = {
   curFilms: [],
   curFilmIndex: -1,
   allFilms: [],
-  isAuthorizationRequired: false,
+  isAuthorizationRequired: undefined,
   avatarUrl: ``,
 };
 
