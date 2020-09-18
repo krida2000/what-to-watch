@@ -8,9 +8,11 @@ const withPlayVideo = (Component) => {
 
       this.onPlay = this.onPlay.bind(this);
       this.onPause = this.onPause.bind(this);
+      this.setTime = this.setTime.bind(this);
 
       this.state = {
         isPlaying: false,
+        time: 0,
       };
     }
 
@@ -20,6 +22,10 @@ const withPlayVideo = (Component) => {
 
     onPause() {
       this.setState(() => ({isPlaying: false}));
+    }
+
+    setTime(curTime) {
+      this.setState(() => ({time: curTime}));
     }
 
     renderControls() {
@@ -32,6 +38,8 @@ const withPlayVideo = (Component) => {
         isPlaying={this.state.isPlaying}
         onPlay={this.onPlay}
         onPause={this.onPause}
+        setTime={this.setTime}
+        time={this.state.time}
         renderControls={this.renderControls}
       />;
     }
