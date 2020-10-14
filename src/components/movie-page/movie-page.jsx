@@ -10,18 +10,20 @@ import MoviesListWrapped from "../movies-list/movies-list";
 
 class MoviePage extends PureComponent {
   render() {
-    const {allFilms} = this.props;
+    const {allFilms, history, changeMovieStatusFavorite} = this.props;
     const id = this.props.match.params.id;
     const film = allFilms.find((el) => +el.id === +id);
 
     const similarFilms = allFilms.filter((el) => (el.genre === film.genre && el.id !== film.id));
 
-    // if(!film){
-    //   return <div></div>;
-    // }
+    if (!film) {
+      return <Header />;
+    }
+
+    const {is_favorite} = film;
 
     return <>
-        <section className="movie-card movie-card--full">
+        <section className="movie-card movie-card--full" style={{backgroundColor: film.background_color}}>
           <div className="movie-card__hero">
             <div className="movie-card__bg">
               <img src={`${film ? film.background_image : ``}`} alt="The Grand Budapest Hotel"/>
@@ -33,25 +35,26 @@ class MoviePage extends PureComponent {
 
             <div className="movie-card__wrap">
               <div className="movie-card__desc">
-                <h2 className="movie-card__title">{film ? film.name : ``}</h2>
+                <h2 className="movie-card__title">{film.name}</h2>
                 <p className="movie-card__meta">
-                  <span className="movie-card__genre">{film ? film.genre : ``}</span>
-                  <span className="movie-card__year">{film ? film.released : ``}</span>
+                  <span className="movie-card__genre">{film.genre}</span>
+                  <span className="movie-card__year">{film.released}</span>
                 </p>
 
                 <div className="movie-card__buttons">
-                  <NavLink to={DefRoute.MOVIE_PAGE + id + `/watch`}>
-                    <button className="btn btn--play movie-card__button" type="button">
-                      <svg viewBox="0 0 19 19" width="19" height="19">
-                      </svg>
-                      <span>Play</span>
-                    </button>
-                  </NavLink>
-                  {/* <button className="btn btn--list movie-card__button" type="button">*/}
-                  {/*  <svg viewBox="0 0 19 20" width="19" height="20">*/}
-                  {/*  </svg>*/}
-                  {/*  <span>My list</span>*/}
-                  {/* </button>*/}
+                  <button className="btn btn--play movie-card__button" type="button"
+                    onClick={() => history.push(DefRoute.MOVIE_PAGE + id + `/watch`)}>
+                    <svg viewBox="0 0 19 19" width="19" height="19">
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                  <button className="btn btn--list movie-card__button" type="button"
+                    onClick={() => changeMovieStatusFavorite(film.id, Number(!is_favorite))}>
+                    <svg viewBox="0 0 19 20" width="19" height="20">
+                      <use xlinkHref={is_favorite ? `#in-list` : `#add`} />
+                    </svg>
+                    <span>My list</span>
+                  </button>
                   {/* <a href="add-review.html" className="btn movie-card__button">Add review</a>*/}
                 </div>
               </div>
@@ -61,7 +64,7 @@ class MoviePage extends PureComponent {
           <div className="movie-card__wrap movie-card__translate-top">
             <div className="movie-card__info">
               <div className="movie-card__poster movie-card__poster--big">
-                <img src={`${film ? film.poster_image : ``}`} alt="The Grand Budapest Hotel poster" width="218"
+                <img src={`${film.poster_image}`} alt="The Grand Budapest Hotel poster" width="218"
                   height="327"/>
               </div>
 
@@ -81,25 +84,25 @@ class MoviePage extends PureComponent {
                 </nav>
 
                 <div className="movie-rating">
-                  <div className="movie-rating__score">{film ? film.rating : ``}</div>
+                  <div className="movie-rating__score">{film.rating}</div>
                   <p className="movie-rating__meta">
                     <span className="movie-rating__level"/>
-                    <span className="movie-rating__count">{film ? film.scores_count : ``} ratings</span>
+                    <span className="movie-rating__count">{film.scores_count} ratings</span>
                   </p>
                 </div>
 
                 <div className="movie-card__text">
-                  {film ? film.description : ``}
+                  {film.description}
 
-                  <p className="movie-card__director"><strong>Director: {film ? film.director : ``}</strong></p>
+                  <p className="movie-card__director"><strong>Director: {film.director}</strong></p>
 
-                  <p className="movie-card__starring"><strong>Starring: {film ? film.starring[0] : ``}{film ? film.starring.map((it, index) => {
+                  <p className="movie-card__starring"><strong>Starring: {film.starring[0]}{film.starring.map((it, index) => {
                     if (index === 0) {
                       return null;
                     } else {
                       return `, ` + it;
                     }
-                  }) : ``}
+                  })}
                   and
                   other</strong></p>
                 </div>
@@ -121,6 +124,8 @@ class MoviePage extends PureComponent {
 MoviePage.propTypes = {
   match: PropTypes.object.isRequired,
   allFilms: PropTypes.array.isRequired,
+  history: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired,
+  changeMovieStatusFavorite: PropTypes.func.isRequired,
 };
 
 // const mapStateToProps = (state, ownProps) => {
@@ -135,7 +140,10 @@ const mapStateToProps = (state, ownProps) => {
   });
 };
 
+const mapDispatchToProps = (dispatch) => ({
+  changeMovieStatusFavorite: (movieId, isFavorite) => dispatch(Operation.changeMovieStatusFavorite(movieId, isFavorite)),
+});
 
 export {MoviePage};
 
-export default connect(mapStateToProps)(MoviePage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoviePage));

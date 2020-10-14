@@ -14,7 +14,7 @@ import MainPage from "../main-page/main-page";
 class App extends PureComponent {
   render() {
     return <>
-      <BrowserRouter history={history}>
+      <BrowserRouter>
         <Switch>
           <Route exact path={DefRoute.ROOT}>
             <MainPage/>

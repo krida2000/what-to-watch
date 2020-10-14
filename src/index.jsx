@@ -29,6 +29,7 @@ function init() {
   );
 
   store.dispatch(Operation.loadFilms());
+  store.dispatch(Operation.loadFavorite());
   store.dispatch(Operation.checkAuthorization());
 
   ReactDOM.render(

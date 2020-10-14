@@ -16,13 +16,15 @@ class SmallMovieCard extends PureComponent {
       <article className="small-movie-card catalog__movies-card"
         onMouseEnter={mouseEnterHandler}
         onMouseLeave={mouseLeaveHandler}>
-        <div className="small-movie-card__image">
-          {!isPlaying ?
-            <img src={movie.background_image} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175"/> :
-            <VideoPlayer preview={movie.preview_video_link} withoutSound={true} movieAutoPlay={true} movieWidth={280} movieHeight={175} poster={movie.background_image}/>}
-        </div>
+        <NavLink to={`${DefRoute.MOVIE_PAGE}${id}`}>
+          <div className="small-movie-card__image">
+            {!isPlaying ?
+              <img src={movie.background_image} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175"/> :
+              <VideoPlayer preview={movie.preview_video_link} withoutSound={true} movieAutoPlay={true} movieWidth={280} movieHeight={175} poster={movie.background_image}/>}
+          </div>
+        </NavLink>
         <h3 className="small-movie-card__title">
-          <NavLink className="small-movie-card__link" to={`${DefRoute.MOVIE_PAGE}${id}`}>{movie.name}</NavLink>
+          <div className="small-movie-card__link" >{movie.name}</div>
         </h3>
       </article>
     );

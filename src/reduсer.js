@@ -20,6 +20,24 @@ const Operation = {
       });
   },
 
+  loadFavorite: () => (dispatch, getState, api) => {
+    return api.get(`/favorite`)
+      .then((response) => {
+        dispatch(ActionCreator.loadFavorite(response.data));
+      });
+  },
+
+  changeMovieStatusFavorite: (movieId, status) => (dispatch, getState, api) => {
+    return api.post(`/favorite/${movieId}/${status}`)
+      .then(() => {
+        dispatch(ActionCreator.changeMovieStatusFavorite(movieId, Boolean(status)));
+        Operation.loadFavorite();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  },
+
   checkAuthorization: () => (dispatch, getState, api) => {
     return api.get(`/login`)
       .then((data) => {
@@ -74,6 +92,20 @@ const ActionCreator = {
     };
   },
 
+  loadFavorite: (films) => {
+    return {
+      type: `LOAD_FAVORITE`,
+      payload: films,
+    };
+  },
+
+  changeMovieStatusFavorite: (movieId, isFavorite) => {
+    return {
+      type: `CHANGE_MOVIE_STATUS_FAVORITE`,
+      payload: {movieId, isFavorite},
+    };
+  },
+
   setAuthorizationRequired: (isAuthorizationRequired) => {
     return {
       type: `UPDATE_AUTHORIZATION`,
@@ -100,6 +132,7 @@ const initialState = {
   curFilms: [],
   curFilmIndex: -1,
   allFilms: [],
+  favoriteFilms: [],
   isAuthorizationRequired: undefined,
   avatarUrl: ``,
 };
@@ -121,6 +154,19 @@ const reducer = (state = initialState, action) => {
     case `LOAD_FILMS`: return Object.assign({}, state, {
       curFilms: action.payload,
       allFilms: action.payload,
+    });
+
+    case `LOAD_FAVORITE`: return Object.assign({}, state, {
+      favoriteFilms: action.payload,
+    });
+    // {movieId, isFavorite}
+    case `CHANGE_MOVIE_STATUS_FAVORITE`: return Object.assign({}, state, {
+      allFilms: state.allFilms.map((it) => {
+        if (it.id === action.payload.movieId) {
+          it.is_favorite = action.payload.isFavorite;
+        }
+        return it;
+      }),
     });
 
     case `UPDATE_AUTHORIZATION`: return Object.assign({}, state, {
